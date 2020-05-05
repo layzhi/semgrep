@@ -1,3 +1,4 @@
+import json
 import subprocess
 from pathlib import Path
 from typing import List
@@ -24,7 +25,7 @@ def _run_semgrep(
     if config is not None:
         extra_options.extend(["--config", config])
 
-    return subprocess.check_output(
+    output = subprocess.check_output(
         [
             "python",
             "-m",
@@ -37,6 +38,11 @@ def _run_semgrep(
         encoding="utf-8",
         stderr=subprocess.STDOUT if stderr else None,
     )
+
+    if not stderr:
+        output = json.dumps(json.loads(output), indent=2, sort_keys=True)
+
+    return output
 
 
 @pytest.fixture
