@@ -4,57 +4,57 @@ from subprocess import CalledProcessError
 import pytest
 
 
-def test_basic_rule__local(run_semgrep, snapshot):
-    snapshot.assert_match(run_semgrep("rules/eqeq.yaml"), "results.json")
+def test_basic_rule__local(run_semgrep_in_tmp, snapshot):
+    snapshot.assert_match(run_semgrep_in_tmp("rules/eqeq.yaml"), "results.json")
 
 
-def test_basic_rule__relative(run_semgrep, snapshot):
+def test_basic_rule__relative(run_semgrep_in_tmp, snapshot):
     snapshot.assert_match(
-        run_semgrep("rules/../rules/eqeq.yaml"), "results.json",
+        run_semgrep_in_tmp("rules/../rules/eqeq.yaml"), "results.json",
     )
 
 
-def test_basic_rule__absolute(run_semgrep, snapshot):
+def test_basic_rule__absolute(run_semgrep_in_tmp, snapshot):
     snapshot.assert_match(
-        run_semgrep(Path.cwd() / "rules" / "eqeq.yaml"), "results.json",
+        run_semgrep_in_tmp(Path.cwd() / "rules" / "eqeq.yaml"), "results.json",
     )
 
 
-def test_hidden_rule__explicit(run_semgrep, snapshot):
-    snapshot.assert_match(run_semgrep("rules/hidden/.hidden"), "results.json")
+def test_hidden_rule__explicit(run_semgrep_in_tmp, snapshot):
+    snapshot.assert_match(run_semgrep_in_tmp("rules/hidden/.hidden"), "results.json")
 
 
-def test_hidden_rule__implicit(run_semgrep, snapshot):
+def test_hidden_rule__implicit(run_semgrep_in_tmp, snapshot):
     with pytest.raises(CalledProcessError) as excinfo:
-        run_semgrep("rules/hidden", stderr=True)
+        run_semgrep_in_tmp("rules/hidden", stderr=True)
     assert excinfo.value.returncode == 2
     snapshot.assert_match(excinfo.value.output, "error.txt")
 
 
-def test_url_rule(run_semgrep, snapshot):
+def test_url_rule(run_semgrep_in_tmp, snapshot):
     snapshot.assert_match(
-        run_semgrep(
+        run_semgrep_in_tmp(
             "https://raw.githubusercontent.com/returntocorp/semgrep-rules/develop/template.yaml",
         ),
         "results.json",
     )
 
 
-def test_registry_rule(run_semgrep, snapshot):
+def test_registry_rule(run_semgrep_in_tmp, snapshot):
     snapshot.assert_match(
-        run_semgrep("r2c"), "results.json",
+        run_semgrep_in_tmp("r2c"), "results.json",
     )
 
 
-def test_default_rule__file(run_semgrep, snapshot):
+def test_default_rule__file(run_semgrep_in_tmp, snapshot):
     Path(".semgrep.yml").symlink_to(Path("rules/eqeq.yaml").resolve())
-    snapshot.assert_match(run_semgrep(), "results.json")
+    snapshot.assert_match(run_semgrep_in_tmp(), "results.json")
 
 
-def test_default_rule__folder(run_semgrep, snapshot):
+def test_default_rule__folder(run_semgrep_in_tmp, snapshot):
     Path(".semgrep").mkdir()
     Path(".semgrep/.semgrep.yml").symlink_to(Path("rules/eqeq.yaml").resolve())
 
     snapshot.assert_match(
-        run_semgrep(), "results.json",
+        run_semgrep_in_tmp(), "results.json",
     )
