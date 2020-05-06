@@ -27,7 +27,7 @@ def _run_semgrep(
 
     output = subprocess.check_output(
         [
-            "python",
+            "python3",
             "-m",
             "semgrep",
             "--json",
