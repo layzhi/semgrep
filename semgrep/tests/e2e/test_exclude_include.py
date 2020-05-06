@@ -26,9 +26,9 @@ def idfn(extra_options):
     ],
     ids=idfn,
 )
-def test_exclude_include(run_semgrep, snapshot, extra_options):
+def test_exclude_include(run_semgrep_in_tmp, snapshot, extra_options):
     snapshot.assert_match(
-        run_semgrep(
+        run_semgrep_in_tmp(
             "rules/eqeq.yaml",
             extra_options=extra_options,
             target_name="exclude_include",
