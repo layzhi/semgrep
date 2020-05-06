@@ -20,9 +20,9 @@ def idfn(extra_options):
         ["--include-dir", "included", "--exclude", "excluded.*"],
         ["--exclude-dir", "excluded", "--include", "included.*"],
         ["--exclude", "excluded.*", "--exclude", "included.*"],
-        ["--exclude-dir", "excluded", "--exclude-dir", "excluded"],
+        ["--exclude-dir", "excluded", "--exclude-dir", "included"],
         ["--include", "excluded.*", "--include", "included.*"],
-        ["--include-dir", "excluded", "--include-dir", "excluded"],
+        ["--include-dir", "excluded", "--include-dir", "included"],
     ],
     ids=idfn,
 )
